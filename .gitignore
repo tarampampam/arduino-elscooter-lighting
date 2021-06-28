@@ -1,0 +1,17 @@
+## IDEs
+/.vscode
+/.idea
+
+## Building artifacts
+.build
+.cache
+*.eep
+*.elf
+*.hex
+*.bin
+
+## Temp files/dirs
+/tmp
+/temp
+/ignore
+build*

@@ -1,0 +1,6 @@
+{
+  "cpu": {
+    "fqbn": "arduino:avr:nano:cpu=atmega328old",
+    "port": "serial:///dev/ttyUSB0"
+  }
+}
