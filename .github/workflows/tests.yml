@@ -1,0 +1,63 @@
+name: tests
+
+on:
+  push:
+    branches: [master, main]
+    paths-ignore: ['*.md', '**/Makefile']
+    tags-ignore: ['**']
+  pull_request:
+    paths-ignore: ['*.md', '**/Makefile']
+
+jobs: # Docs: <https://help.github.com/en/articles/workflow-syntax-for-github-actions>
+  lint:
+    name: Lint the sketches
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      # Its focus is on the structure, metadata, and configuration of Arduino projects, rather than the code
+      - name: Run the linter
+        uses: arduino/arduino-lint-action@v1 # https://github.com/arduino/arduino-lint-action
+        with:
+          project-type: sketch
+          recursive: true
+          library-manager: update
+          compliance: strict
+
+  compile-sketch:
+    name: Compile the sketch
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Setup Arduino CLI
+        uses: arduino/setup-arduino-cli@v1 # https://github.com/arduino/setup-arduino-cli
+
+      - name: Get Arduino CLI data directory
+        id: arduino-cli-data
+        run: echo "::set-output name=dir::$(arduino-cli config dump --format json | jq -r .directories.data)"
+
+      - name: Generate cache key values
+        id: cache-values
+        run: echo "::set-output name=salt::`echo $(date +'%U')`"
+
+      - name: Cache Arduino CLI data
+        id: arduino-cli-cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.arduino-cli-data.outputs.dir }}
+          key: arduino-cli-data-${{ steps.cache-values.outputs.salt }}
+          restore-keys: arduino-cli-data-
+
+      - name: Updates the index of cores to the latest version
+        if: steps.arduino-cli-cache.outputs.cache-hit != 'true'
+        run: arduino-cli core update-index
+
+      - name: Install the platform
+        if: steps.arduino-cli-cache.outputs.cache-hit != 'true'
+        run: arduino-cli core install arduino:avr
+
+      - name: Compile the sketch
+        run: arduino-cli compile --warnings all .
