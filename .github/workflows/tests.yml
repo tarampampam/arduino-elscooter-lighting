@@ -10,7 +10,7 @@ on:
 
 jobs: # Docs: <https://help.github.com/en/articles/workflow-syntax-for-github-actions>
   lint:
-    name: Lint the sketches
+    name: Lint the sketch
     runs-on: ubuntu-20.04
     steps:
       - name: Check out code
@@ -21,7 +21,6 @@ jobs: # Docs: <https://help.github.com/en/articles/workflow-syntax-for-github-ac
         uses: arduino/arduino-lint-action@v1 # https://github.com/arduino/arduino-lint-action
         with:
           project-type: sketch
-          recursive: true
           library-manager: update
           compliance: strict
 
