@@ -15,9 +15,6 @@ public:
   // Call this function in the main loop.
   void tick();
 
-  // Debug mode state.
-  bool debugModeEnabled;
-
   // How long turning signal must be on.
   uint16_t powerOnTime = 500;
 

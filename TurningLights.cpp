@@ -19,11 +19,6 @@ void TurningLights::updateButtonsState()
 {
   leftButtonIsOn = digitalRead(leftButtonPin) == LOW;
   rightButtonIsOn = digitalRead(rightButtonPin) == LOW;
-
-  if (debugModeEnabled)
-  {
-    Serial.println("[debug] LEFT|RIGHT turning button is " + String(leftButtonIsOn ? "ON" : "OFF") + "|" + String(rightButtonIsOn ? "ON" : "OFF"));
-  }
 }
 
 /// Do the main turning lights logic.
