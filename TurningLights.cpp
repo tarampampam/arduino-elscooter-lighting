@@ -11,8 +11,8 @@ TurningLights::TurningLights(uint8_t leftBtnPin, uint8_t rightBtnPin, uint8_t le
   pinMode(leftLightPin, OUTPUT);
   pinMode(rightLightPin, OUTPUT);
 
-  pinMode(leftButtonPin, INPUT_PULLUP);
-  pinMode(rightButtonPin, INPUT_PULLUP);
+  pinMode(leftButtonPin, INPUT);
+  pinMode(rightButtonPin, INPUT);
 }
 
 void TurningLights::updateButtonsState()

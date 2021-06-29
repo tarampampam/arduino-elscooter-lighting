@@ -7,9 +7,11 @@ The main reasons for additional board usage are:
 - Turning lights
 - _..todo :).._
 
-## Installation scheme
+## Circuit
 
 ![circuit](./art/circuit.png)
+
+Project for EasyEDA can be [found here](https://oshwlab.com/tarampampam/arduino-elscooter-firmware).
 
 ## Required software
 
@@ -21,5 +23,6 @@ Your Linux-based system must have installed the following software:
 ### Usefull links
 
 - [Уроки Ардуино #9 - управление нагрузкой MOSFET транзистор](https://www.youtube.com/watch?v=hoprWM_b6V0)
+- [Уроки Arduino. Расширенное управление кнопкой](https://youtu.be/BhxEpr-LMQI?t=109)
 
 [arduino]:https://www.arduino.cc/
