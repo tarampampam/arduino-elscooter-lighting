@@ -11,7 +11,7 @@ The main reasons for additional board usage are:
 
 ![circuit](./art/circuit.png)
 
-Project for EasyEDA can be [found here](https://oshwlab.com/tarampampam/arduino-elscooter-firmware).
+Project for EasyEDA can be [found here](https://oshwlab.com/tarampampam/arduino-elscooter-lighting).
 
 ## Required software
 
