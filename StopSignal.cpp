@@ -1,13 +1,13 @@
 #include <Arduino.h>
 #include "StopSignal.h"
 
-StopSignal::StopSignal(uint8_t bPin, uint8_t lPin)
+void StopSignal::init()
 {
-  pinMode(lightPin = lPin, OUTPUT);
-  pinMode(buttonPin = bPin, INPUT);
+  pinMode(lightPin, OUTPUT);
+  pinMode(buttonPin, INPUT);
 }
 
-bool StopSignal::buttonIsOn()
+bool StopSignal::buttonIsPressed()
 {
   return digitalRead(buttonPin) == LOW;
 }
@@ -15,31 +15,40 @@ bool StopSignal::buttonIsOn()
 /// Do the main stop signal logic here.
 void StopSignal::tick()
 {
-  if (buttonIsOn())
+  // internal timers state
+  static struct
+  {
+    uint32_t enableLightAt, disableLightAt;
+  } timers;
+
+  if (buttonIsPressed())
   {
     uint32_t currentTimeMs = millis();
 
-    if (currentTimeMs >= enableLightAt)
+    if (currentTimeMs >= timers.enableLightAt)
     {
-      enableLightAt = currentTimeMs + powerOnTime + blinkingInterval;
-      disableLightAt = currentTimeMs + powerOnTime;
+      timers.enableLightAt = currentTimeMs + powerOnTime + blinkingInterval;
+      timers.disableLightAt = currentTimeMs + powerOnTime;
 
       digitalWrite(lightPin, HIGH);
     }
-    else if (currentTimeMs >= disableLightAt)
+    else if (currentTimeMs >= timers.disableLightAt)
     {
       digitalWrite(lightPin, LOW);
     }
   }
   else
   {
-    digitalWrite(lightPin, LOW);
+    if (digitalRead(lightPin) != LOW)
+    {
+      digitalWrite(lightPin, LOW);
+    }
 
     // reset timers state
-    if (enableLightAt != 0 || disableLightAt != 0)
+    if (timers.enableLightAt != 0 || timers.disableLightAt != 0)
     {
-      enableLightAt = 0;
-      disableLightAt = 0;
+      timers.enableLightAt = 0;
+      timers.disableLightAt = 0;
     }
   }
 }

@@ -15,7 +15,8 @@ StopSignal stopSignal(STOP_SIGNAL_IN_PIN, STOP_SIGNAL_OUT_PIN);
 
 void setup()
 {
-  // do nothing
+  turnings.init();
+  stopSignal.init();
 }
 
 void loop()

@@ -8,9 +8,16 @@ public:
 
   // Create new StopSignal instance.
   StopSignal(
-      uint8_t /* button bin (in) */,
-      uint8_t /* light pin (out) */
-  );
+      uint8_t bPin /* button bin (in) */,
+      uint8_t lPin /* light pin (out) */
+  )
+  {
+    lightPin = lPin;
+    buttonPin = bPin;
+  };
+
+  // Make initialization.
+  void init();
 
   // Call this function in the main loop.
   void tick();
@@ -26,10 +33,7 @@ private:
   uint8_t buttonPin, lightPin;
 
   // Get button state.
-  bool buttonIsOn();
-
-  // Internal timer states.
-  uint32_t enableLightAt, disableLightAt;
+  bool buttonIsPressed();
 };
 
 #endif
