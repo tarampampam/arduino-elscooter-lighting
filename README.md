@@ -37,9 +37,8 @@ Type     | Description | Quantity
 Resistor | `20 kOm`    | 1
 Resistor | `10 kOm`    | 5
 Resistor | `100 Om`    | 3
-Mosfet   | `IRL3705N`  | 3
+Mosfet   | [`IRL3705N`](https://www.infineon.com/dgdl/irl3705n.pdf?fileId=5546d462533600a40153565f29f42532) | 3
 Arduino  | `Nano`      | 1
-
 
 ## Recommended software for flashing the Arduino board
 
