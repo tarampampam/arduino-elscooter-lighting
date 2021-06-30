@@ -1,28 +1,66 @@
+<p align="center">
+  <img src="https://hsto.org/webt/e-/uf/rg/e-ufrgdwhmf9alft7qfqchnpaak.png" alt="logo" width="128" />
+</p>
+
 # Electric Scooter Firmware
 
-This repository contains the source code of firmware for the additional board, which installed on my electric scooter.
+[![Build Status][badge_build]][link_build]
+[![License][badge_license]][link_license]
 
-The main reasons for additional board usage are:
+This repository contains the source code of firmware for the additional board, which installed on my electric scooter and used for lighting management, namely:
 
 - Turning lights
-- _..todo :).._
+- Stop signal
 
-## Circuit
+When the button, connected on `left turn btn` is pressed - lamps (12V) connected to the `left turn leds` will be blinks (about 500ms lightning will be on). The same with the `right turn btn` and `right turn leds`. Stop signal button do the then thing, but on separate pin's.
+
+Arduino board and LEDs use the same power 12V line.
+
+### Additional features:
+
+- _WIP_
+
+## Schematic & PCB
 
 ![circuit](./art/circuit.png)
 
-Project for EasyEDA can be [found here](https://oshwlab.com/tarampampam/arduino-elscooter-lighting).
+Front side | Back side
+:--------: | :-------:
+![pcb-front](./art/pcb-front.png) | ![pcb-back](./art/pcb-back.png)
 
-## Required software
+Project for EasyEDA can be [found here][easyeda_project].
 
-Your Linux-based system must have installed the following software:
+## Bill of Materials (BOM)
+
+Type     | Description | Quantity
+-------- | ----------- | --------
+Resistor | `20 kOm`    | 1
+Resistor | `10 kOm`    | 5
+Resistor | `100 Om`    | 3
+Mosfet   | `IRL3705N`  | 3
+Arduino  | `Nano`      | 1
+
+
+## Recommended software for flashing the Arduino board
 
 - `make`
 - [`arduino-cli`](https://arduino.github.io/arduino-cli/latest/)
+
+All what you need is:
+
+- Edit `sketch.json` file (change the `port` and/or `fqbn`)
+- Execute `make` without any arguments **or** open this project in ArduinoIDE and press "Upload" button
 
 ### Usefull links
 
 - [Уроки Ардуино #9 - управление нагрузкой MOSFET транзистор](https://www.youtube.com/watch?v=hoprWM_b6V0)
 - [Уроки Arduino. Расширенное управление кнопкой](https://youtu.be/BhxEpr-LMQI?t=109)
 
+[badge_build]:https://img.shields.io/github/workflow/status/tarampampam/arduino-elscooter-lighting/tests?maxAge=30
+[badge_license]:https://img.shields.io/github/license/tarampampam/arduino-elscooter-lighting.svg?longCache=true
+[link_build]:https://github.com/tarampampam/arduino-elscooter-lighting/actions
+[link_license]:https://github.com/tarampampam/arduino-elscooter-lighting/blob/master/LICENSE
+
 [arduino]:https://www.arduino.cc/
+[easyeda_project]:https://oshwlab.com/tarampampam/arduino-elscooter-lighting
+[easyeda_editor]:https://easyeda.com/editor#id=a81d4b6eda974792aa72ebeecd0596e6|fbbeb966c847492b8f22c1e73ca057f4|
