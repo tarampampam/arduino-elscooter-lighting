@@ -4,6 +4,8 @@
 class TurningLights
 {
 public:
+  TurningLights() = delete; // disable default constructor
+
   // Create new TurningLights instance.
   TurningLights(
       uint8_t /* left button bin (in) */,

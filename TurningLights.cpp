@@ -3,16 +3,11 @@
 
 TurningLights::TurningLights(uint8_t leftBtnPin, uint8_t rightBtnPin, uint8_t leftLgtPin, uint8_t rightLgtPin)
 {
-  leftButtonPin = leftBtnPin;
-  rightButtonPin = rightBtnPin;
-  leftLightPin = leftLgtPin;
-  rightLightPin = rightLgtPin;
+  pinMode(leftLightPin = leftLgtPin, OUTPUT);
+  pinMode(rightLightPin = rightLgtPin, OUTPUT);
 
-  pinMode(leftLightPin, OUTPUT);
-  pinMode(rightLightPin, OUTPUT);
-
-  pinMode(leftButtonPin, INPUT);
-  pinMode(rightButtonPin, INPUT);
+  pinMode(leftButtonPin = leftBtnPin, INPUT);
+  pinMode(rightButtonPin = rightBtnPin, INPUT);
 }
 
 void TurningLights::updateButtonsState()
@@ -21,15 +16,15 @@ void TurningLights::updateButtonsState()
   rightButtonIsOn = digitalRead(rightButtonPin) == LOW;
 }
 
-/// Do the main turning lights logic.
+/// Do the main turning lights logic here.
 void TurningLights::tick()
 {
   updateButtonsState();
 
-  uint32_t currentTimeMs = millis();
-
   if (leftButtonIsOn || rightButtonIsOn)
   {
+    uint32_t currentTimeMs = millis();
+
     if (currentTimeMs >= enableLightAt)
     {
       enableLightAt = currentTimeMs + powerOnTime + blinkingInterval;
@@ -57,7 +52,10 @@ void TurningLights::tick()
     digitalWrite(leftLightPin, LOW);
 
     // reset timers state
-    enableLightAt = 0;
-    disableLightAt = 0;
+    if (enableLightAt != 0 || disableLightAt != 0)
+    {
+      enableLightAt = 0;
+      disableLightAt = 0;
+    }
   }
 }
