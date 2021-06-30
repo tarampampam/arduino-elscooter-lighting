@@ -2,7 +2,7 @@
   <img src="https://hsto.org/webt/e-/uf/rg/e-ufrgdwhmf9alft7qfqchnpaak.png" alt="logo" width="128" />
 </p>
 
-# Electric Scooter Firmware
+# Electric Scooter Lighting Firmware
 
 [![Build Status][badge_build]][link_build]
 [![License][badge_license]][link_license]
