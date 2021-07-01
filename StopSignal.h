@@ -22,6 +22,9 @@ public:
   // Call this function in the main loop.
   void tick();
 
+  // Get button state.
+  bool buttonIsPressed();
+
   // How long stop signal must be on.
   uint16_t powerOnTime = 150;
 
@@ -32,8 +35,11 @@ private:
   // Button and light pins.
   uint8_t buttonPin, lightPin;
 
-  // Get button state.
-  bool buttonIsPressed();
+  // Timer states.
+  struct
+  {
+    uint32_t enableLightAt, disableLightAt;
+  } timers;
 };
 
 #endif

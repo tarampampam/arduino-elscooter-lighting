@@ -27,6 +27,12 @@ public:
   // Call this function in the main loop.
   void tick();
 
+  // Get left turning button state.
+  bool leftButtonIsPressed();
+
+  // Get right turning button state.
+  bool rightButtonIsPressed();
+
   // How long turning signal must be on.
   uint16_t powerOnTime = 500;
 
@@ -37,6 +43,12 @@ private:
   // Button and light pins.
   uint8_t leftButtonPin, rightButtonPin;
   uint8_t leftLightPin, rightLightPin;
+
+  // Timer states.
+  struct
+  {
+    uint32_t enableLightAt, disableLightAt;
+  } timers;
 };
 
 #endif

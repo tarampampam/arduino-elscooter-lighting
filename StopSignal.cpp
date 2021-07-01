@@ -15,12 +15,6 @@ bool StopSignal::buttonIsPressed()
 /// Do the main stop signal logic here.
 void StopSignal::tick()
 {
-  // internal timers state
-  static struct
-  {
-    uint32_t enableLightAt, disableLightAt;
-  } timers;
-
   if (buttonIsPressed())
   {
     uint32_t currentTimeMs = millis();

@@ -10,26 +10,23 @@ void TurningLights::init()
   pinMode(rightButtonPin, INPUT);
 }
 
+bool TurningLights::leftButtonIsPressed()
+{
+  return digitalRead(leftButtonPin) == LOW;
+}
+
+bool TurningLights::rightButtonIsPressed()
+{
+  return digitalRead(rightButtonPin) == LOW;
+}
+
 /// Do the main turning lights logic here.
 void TurningLights::tick()
 {
-  // read current buttons state
-  struct
-  {
-    bool LeftIsPressed, RightIsPressed;
-  } btnState = {
-    LeftIsPressed : digitalRead(leftButtonPin) == LOW,
-    RightIsPressed : digitalRead(rightButtonPin) == LOW,
-  };
-
-  // internal timers state
-  static struct
-  {
-    uint32_t enableLightAt, disableLightAt;
-  } timers;
+  bool lBtnPressed = leftButtonIsPressed(), rBtnPressed = rightButtonIsPressed();
 
   // if any button is pressed
-  if (btnState.LeftIsPressed || btnState.RightIsPressed)
+  if (lBtnPressed || rBtnPressed)
   {
     uint32_t currentTimeMs = millis();
 
@@ -38,11 +35,11 @@ void TurningLights::tick()
       timers.enableLightAt = currentTimeMs + powerOnTime + blinkingInterval;
       timers.disableLightAt = currentTimeMs + powerOnTime;
 
-      if (btnState.LeftIsPressed)
+      if (lBtnPressed)
       {
         digitalWrite(leftLightPin, HIGH);
       }
-      if (btnState.RightIsPressed)
+      if (rBtnPressed)
       {
         digitalWrite(rightLightPin, HIGH);
       }
