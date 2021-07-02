@@ -3,11 +3,11 @@
 
 void TurningLights::init()
 {
-  pinMode(leftLightPin, OUTPUT);
-  pinMode(rightLightPin, OUTPUT);
-
   pinMode(leftButtonPin, INPUT);
   pinMode(rightButtonPin, INPUT);
+
+  pinMode(leftLightPin, OUTPUT);
+  pinMode(rightLightPin, OUTPUT);
 }
 
 bool TurningLights::leftButtonIsPressed()
@@ -53,15 +53,8 @@ void TurningLights::tick()
   }
   else
   {
-    if (digitalRead(rightLightPin) != LOW)
-    {
-      digitalWrite(rightLightPin, LOW);
-    }
-
-    if (digitalRead(leftLightPin) != LOW)
-    {
-      digitalWrite(leftLightPin, LOW);
-    }
+    digitalWrite(rightLightPin, LOW);
+    digitalWrite(leftLightPin, LOW);
 
     // reset timers state
     if (timers.enableLightAt != 0 || timers.disableLightAt != 0)

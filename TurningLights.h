@@ -8,7 +8,7 @@ public:
 
   // Create new TurningLights instance.
   TurningLights(
-      uint8_t lbPin /* left button bin (in) */,
+      uint8_t lbPin /* left button pin (in) */,
       uint8_t rbPin /* right button pin (in) */,
       uint8_t llPin /* left light pin (out) */,
       uint8_t rlPin /* right light pin (out) */

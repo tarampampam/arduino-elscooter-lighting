@@ -3,8 +3,8 @@
 
 void StopSignal::init()
 {
-  pinMode(lightPin, OUTPUT);
   pinMode(buttonPin, INPUT);
+  pinMode(lightPin, OUTPUT);
 }
 
 bool StopSignal::buttonIsPressed()
@@ -33,10 +33,7 @@ void StopSignal::tick()
   }
   else
   {
-    if (digitalRead(lightPin) != LOW)
-    {
-      digitalWrite(lightPin, LOW);
-    }
+    digitalWrite(lightPin, LOW);
 
     // reset timers state
     if (timers.enableLightAt != 0 || timers.disableLightAt != 0)
