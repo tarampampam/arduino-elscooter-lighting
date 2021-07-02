@@ -32,13 +32,15 @@ Project for EasyEDA can be [found here][easyeda_project].
 
 ## Bill of Materials (BOM)
 
-Type     | Description | Quantity
--------- | ----------- | --------
-Resistor | `20 kOm`    | 1
-Resistor | `10 kOm`    | 5
-Resistor | `100 Om`    | 3
-Mosfet   | [`IRL3705N`](https://www.infineon.com/dgdl/irl3705n.pdf?fileId=5546d462533600a40153565f29f42532) | 3
-Arduino  | `Nano`      | 1
+Type        | Description | Quantity
+----------- | ----------- | --------
+Fuse        | `2A`        | 1
+Fuse holder | -           | 2
+Resistor    | `14 kOm`    | 4
+Resistor    | `10 kOm`    | 5
+Resistor    | `100 Om`    | 5
+Mosfet      | [`IRL3705N`](https://www.infineon.com/dgdl/irl3705n.pdf?fileId=5546d462533600a40153565f29f42532) | 5
+Arduino     | `Nano`      | 1
 
 ## Recommended software for flashing the Arduino board
 
