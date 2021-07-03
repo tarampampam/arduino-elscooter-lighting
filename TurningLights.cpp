@@ -4,43 +4,44 @@
 
 TurningLights::TurningLights(InputSwitch *leftSw, InputSwitch *rightSw, OutputKey *leftKey, OutputKey *rightKey)
 {
-  leftInput = leftSw;
-  rightInput = rightSw;
-  leftOutput = leftKey;
-  rightOutput = rightKey;
+  leftInput = leftSw, rightInput = rightSw;
+  leftOutput = leftKey, rightOutput = rightKey;
 
-  pwm = new PWM(500 + 400, 400);
+  pwm = new PWM;
+  pwm->setFrequency(NORMAL);
 }
 
-void TurningLights::setBlinkingInterval(unsigned int on, unsigned int off)
+void TurningLights::setBlinkingFrequency(Frequency f)
+{
+  pwm->setFrequency(f);
+}
+
+void TurningLights::setBlinkingInterval(unsigned long int on, unsigned long int off)
 {
   pwm->setPeriodTime(on + off);
   pwm->setImpulseTime(off);
 }
 
 /// Do the main stop signal logic here.
-void TurningLights::tick(unsigned long currentTimeMs)
+void TurningLights::tick(unsigned long int currentTimeMicros)
 {
   bool leftInputIsOn = leftInput->isOn(), rightInputIsOn = rightInput->isOn();
 
   if (leftInputIsOn || rightInputIsOn)
   {
-    switch (pwm->tick(currentTimeMs))
+    switch (pwm->tick(currentTimeMicros))
     {
     case PWM_HIGH:
-      if (leftInputIsOn)
-      {
-        leftOutput->open();
-      }
-      if (rightInputIsOn)
-      {
-        rightOutput->open();
-      }
+      leftInputIsOn ? leftOutput->open() : leftOutput->close();
+      rightInputIsOn ? rightOutput->open() : rightOutput->close();
       break;
 
     case PWM_LOW:
       leftOutput->close();
       rightOutput->close();
+      break;
+
+    case PWM_NONE:
       break;
     }
   }

@@ -9,8 +9,8 @@ class StopSignal
 public:
   StopSignal() = delete;
   StopSignal(InputSwitch *sw, OutputKey *key);
-  void setBlinkingInterval(unsigned int on, unsigned int off);
-  void tick(unsigned long /* millis() */);
+  void setBlinkingInterval(unsigned long int on, unsigned long int off);
+  void tick(unsigned long int /* micros() */);
 
 private:
   InputSwitch *input;

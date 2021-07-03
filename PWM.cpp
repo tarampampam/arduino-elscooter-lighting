@@ -1,34 +1,87 @@
 #include "PWM.h"
 
-PWM::PWM(unsigned int period, unsigned int impulse)
+PWM::PWM()
+{
+  setFrequency(NORMAL);
+}
+
+PWM::PWM(unsigned long int period, unsigned long int impulse)
 {
   setPeriodTime(period);
   setImpulseTime(impulse);
 }
 
-void PWM::setPeriodTime(unsigned int t)
+void PWM::setFrequency(Frequency f)
+{
+  switch (f)
+  {
+  case ALWAYS:
+    setPeriodTime(100000), setImpulseTime(100000);
+    break;
+
+  case VERY_SLOW:
+    setPeriodTime(2560000), setImpulseTime(1280000);
+    break;
+
+  case SLOW:
+    setPeriodTime(1280000), setImpulseTime(640000);
+    break;
+
+  case NORMAL:
+    setPeriodTime(640000), setImpulseTime(320000);
+    break;
+
+  case FAST:
+    setPeriodTime(320000), setImpulseTime(160000);
+    break;
+
+  case VERY_FAST:
+    setPeriodTime(160000), setImpulseTime(80000);
+    break;
+
+  case VERY_VERY_FAST:
+    setPeriodTime(80000), setImpulseTime(40000);
+    break;
+
+  case NEVER:
+    setPeriodTime(100000), setImpulseTime(0);
+    break;
+  }
+}
+
+void PWM::setPeriodTime(unsigned long int t)
 {
   period = (t < impulse) ? impulse : t; // period time cannot be less than impulse time
 }
 
-void PWM::setImpulseTime(unsigned int t)
+void PWM::setImpulseTime(unsigned long int t)
 {
   impulse = (t > period) ? period : t; // impulse time cannot be greater than period time
 }
 
-Signal PWM::tick(unsigned long currentTimeMs)
+Signal PWM::tick(unsigned long int currentTimeMicros)
 {
   if (started)
   {
-    if (currentTimeMs >= highSignalAt)
+    if (period == impulse)
     {
-      highSignalAt = currentTimeMs + period; // set time for the NEXT high signal
-      lowSignalAt = currentTimeMs + impulse;
+      return PWM_HIGH;
+    }
+
+    if (impulse == 0)
+    {
+      return PWM_LOW;
+    }
+
+    if (currentTimeMicros >= highSignalAt)
+    {
+      highSignalAt = currentTimeMicros + period; // set time for the NEXT high signal
+      lowSignalAt = currentTimeMicros + impulse;
 
       return PWM_HIGH;
     }
 
-    if (currentTimeMs >= lowSignalAt)
+    if (currentTimeMicros >= lowSignalAt)
     {
       return PWM_LOW;
     }

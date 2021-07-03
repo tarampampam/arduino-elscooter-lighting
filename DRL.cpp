@@ -1,23 +1,36 @@
-// #include <Arduino.h>
-// #include "DRL.h"
+#include "DRL.h"
+#include "PWM.h"
+#include "IO.h"
 
-// void DRL::init()
-// {
-//   pinMode(switchPin, INPUT);
+DRL::DRL(InputSwitch *sw, OutputKey *frontKey, OutputKey *backKey)
+{
+  input = sw;
+  outputFront = frontKey, outputBack = backKey;
 
-//   pinMode(frontLightPin, OUTPUT);
-//   pinMode(backLightPin, OUTPUT);
-// }
+  pwm = new PWM(300, 200);
+}
 
-// bool DRL::switchIsOn()
-// {
-//   return digitalRead(switchPin) == LOW;
-// }
+void DRL::setBlinkingInterval(unsigned long int on, unsigned long int off)
+{
+  pwm->setPeriodTime(on + off);
+  pwm->setImpulseTime(off);
+}
 
-// bool DRL::stopSignalButtonIsPressed()
-// {
-//   return digitalRead(stopSignalButtonPin) == LOW;
-// }
+/// Do the main stop signal logic here.
+void DRL::tick(unsigned long int currentTimeMicros)
+{
+  if (input->isOn())
+  {
+    outputFront->open();
+    outputBack->open();
+  }
+  else
+  {
+    outputFront->close();
+    outputBack->close();
+    // pwm->reset();
+  }
+}
 
 // /// Do the main turning lights logic here.
 // void DRL::tick()

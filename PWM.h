@@ -22,13 +22,27 @@ enum Signal
   PWM_LOW
 };
 
+enum Frequency // sugar for easy period/impulse management
+{
+  ALWAYS,
+  VERY_SLOW,
+  SLOW,
+  NORMAL,
+  FAST,
+  VERY_FAST,
+  VERY_VERY_FAST,
+  NEVER
+};
+
 class PWM
 {
 public:
-  PWM(unsigned int period, unsigned int impulse);
-  void setPeriodTime(unsigned int);
-  void setImpulseTime(unsigned int);
-  Signal tick(unsigned long currentTimeMs /* millis() */);
+  PWM();
+  PWM(unsigned long int period, unsigned long int impulse);
+  void setPeriodTime(unsigned long int);
+  void setImpulseTime(unsigned long int);
+  void setFrequency(Frequency);
+  Signal tick(unsigned long int /* micros() */);
   void reset();
   void start();
   void stop();
@@ -36,8 +50,8 @@ public:
 
 private:
   bool started = true;
-  unsigned int period = 1000, impulse = 500; // the period always must be greater than impulse
-  unsigned long highSignalAt = 0, lowSignalAt = 0;
+  unsigned long int period = 1000000, impulse = 500000; // the period always must be greater than impulse
+  unsigned long int highSignalAt = 0, lowSignalAt = 0;
 };
 
 #endif
