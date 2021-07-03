@@ -7,12 +7,13 @@ class DRL
 {
 public:
   DRL() = delete;
-  DRL(InputSwitch *sw, OutputKey *frontKey, OutputKey *backKey);
+  DRL(InputSwitch *sw, InputSwitch *stopSw, OutputKey *frontKey, OutputKey *backKey);
+  void setBlinkingFrequency(Frequency);
   void setBlinkingInterval(unsigned long int on, unsigned long int off);
   void tick(unsigned long int /* micros() */);
 
 private:
-  InputSwitch *input;
+  InputSwitch *input, *stopInput;
   OutputKey *outputFront, *outputBack;
   PWM *pwm;
 };

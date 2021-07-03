@@ -29,6 +29,7 @@ enum Frequency // sugar for easy period/impulse management
   SLOW,
   NORMAL,
   FAST,
+  FAST_SMALL_DELAY,
   VERY_FAST,
   VERY_VERY_FAST,
   NEVER

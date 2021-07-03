@@ -16,7 +16,7 @@ OutputKey rightTurningKey(12);     // phisical pin #15
 
 TurningLights turnings(&leftTurningButton, &rightTurningButton, &leftTurningKey, &rightTurningKey);
 StopSignal stopSignal(&stopSignalButton, &stopSignalKey);
-DRL drl(&drlSwitch, &frontDrlKey, &backDrlKey);
+DRL drl(&drlSwitch, &stopSignalButton, &frontDrlKey, &backDrlKey);
 
 void setup()
 {

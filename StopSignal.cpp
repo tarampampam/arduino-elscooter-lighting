@@ -6,7 +6,13 @@ StopSignal::StopSignal(InputSwitch *sw, OutputKey *key)
 {
   input = sw, output = key;
 
-  pwm = new PWM(320000, 250000);
+  pwm = new PWM();
+  pwm->setFrequency(FAST_SMALL_DELAY);
+}
+
+void StopSignal::setBlinkingFrequency(Frequency f)
+{
+  pwm->setFrequency(f);
 }
 
 void StopSignal::setBlinkingInterval(unsigned long int on, unsigned long int off)

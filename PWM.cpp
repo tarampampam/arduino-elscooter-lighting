@@ -35,6 +35,10 @@ void PWM::setFrequency(Frequency f)
     setPeriodTime(320000), setImpulseTime(160000);
     break;
 
+  case FAST_SMALL_DELAY:
+    setPeriodTime(320000), setImpulseTime(250000);
+    break;
+
   case VERY_FAST:
     setPeriodTime(160000), setImpulseTime(80000);
     break;
