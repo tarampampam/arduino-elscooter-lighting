@@ -1,45 +1,40 @@
 #include <Arduino.h>
 #include "StopSignal.h"
+#include "PWM.h"
+#include "IO.h"
 
-void StopSignal::init()
+StopSignal::StopSignal(InputSwitch *sw, OutputKey *key)
 {
-  pinMode(buttonPin, INPUT);
-  pinMode(lightPin, OUTPUT);
+  input = sw, output = key;
+
+  pwm = new PWM(150 + 100, 100);
 }
 
-bool StopSignal::buttonIsPressed()
+void StopSignal::setBlinkingInterval(unsigned int on, unsigned int off)
 {
-  return digitalRead(buttonPin) == LOW;
+  pwm->setPeriodTime(on + off);
+  pwm->setImpulseTime(off);
 }
 
 /// Do the main stop signal logic here.
-void StopSignal::tick()
+void StopSignal::tick(unsigned long currentTimeMs)
 {
-  if (buttonIsPressed())
+  if (input->isOn())
   {
-    uint32_t currentTimeMs = millis();
-
-    if (currentTimeMs >= timers.enableLightAt)
+    switch (pwm->tick(currentTimeMs))
     {
-      timers.enableLightAt = currentTimeMs + powerOnTime + blinkingInterval;
-      timers.disableLightAt = currentTimeMs + powerOnTime;
+    case PWM_HIGH:
+      output->open();
+      break;
 
-      digitalWrite(lightPin, HIGH);
-    }
-    else if (currentTimeMs >= timers.disableLightAt)
-    {
-      digitalWrite(lightPin, LOW);
+    case PWM_LOW:
+      output->close();
+      break;
     }
   }
   else
   {
-    digitalWrite(lightPin, LOW);
-
-    // reset timers state
-    if (timers.enableLightAt != 0 || timers.disableLightAt != 0)
-    {
-      timers.enableLightAt = 0;
-      timers.disableLightAt = 0;
-    }
+    output->close();
+    pwm->reset();
   }
 }

@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 #ifndef TurningLights_h
 #define TurningLights_h
 

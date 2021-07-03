@@ -1,59 +1,61 @@
-#ifndef DRL_h
-#define DRL_h
+// #include <Arduino.h>
 
-#include "StopSignal.h"
+// #ifndef DRL_h
+// #define DRL_h
 
-class DRL
-{
-public:
-  DRL() = delete;
+// #include "StopSignal.h"
 
-  DRL(
-      uint8_t swPin /* switcher pin (in) */,
-      uint8_t fPin /* front pin (out) */,
-      uint8_t bPin /* back pin (out) */,
-      uint8_t stopBtnPin = UNUSED_PIN /* stop signal button pin (in); if defined - on stop btn pressing back DRL light will blinks */
-  )
-  {
-    switchPin = swPin;
-    frontLightPin = fPin;
-    backLightPin = bPin;
+// class DRL
+// {
+// public:
+//   DRL() = delete;
 
-    if (stopBtnPin != UNUSED_PIN)
-    {
-      stopSignalButtonPin = stopBtnPin;
-    }
-  };
+//   DRL(
+//       uint8_t swPin /* switcher pin (in) */,
+//       uint8_t fPin /* front pin (out) */,
+//       uint8_t bPin /* back pin (out) */,
+//       uint8_t stopBtnPin = UNUSED_PIN /* stop signal button pin (in); if defined - on stop btn pressing back DRL light will blinks */
+//   )
+//   {
+//     switchPin = swPin;
+//     frontLightPin = fPin;
+//     backLightPin = bPin;
 
-  // Make initialization.
-  void init();
+//     if (stopBtnPin != UNUSED_PIN)
+//     {
+//       stopSignalButtonPin = stopBtnPin;
+//     }
+//   };
 
-  // Call this function in the main loop.
-  void tick();
+//   // Make initialization.
+//   void init();
 
-  // Get switch state.
-  bool switchIsOn();
+//   // Call this function in the main loop.
+//   void tick();
 
-  // How long stop signal must be on.
-  uint16_t powerOnTime = StopSignal::DEFAULT_POWER_ON_TIME;
+//   // Get switch state.
+//   bool switchIsOn();
 
-  // Delay between stop signal blinks.
-  uint16_t blinkingInterval = StopSignal::DEFAULT_BLINKING_INTERVAL;
+//   // How long stop signal must be on.
+//   uint16_t powerOnTime = StopSignal::DEFAULT_POWER_ON_TIME;
 
-private:
-  static const uint8_t UNUSED_PIN = 0;
+//   // Delay between stop signal blinks.
+//   uint16_t blinkingInterval = StopSignal::DEFAULT_BLINKING_INTERVAL;
 
-  // Switcher, button and light pins.
-  uint8_t switchPin, stopSignalButtonPin, frontLightPin, backLightPin;
+// private:
+//   static const uint8_t UNUSED_PIN = 0;
 
-  // Get stop signal button state,
-  bool stopSignalButtonIsPressed();
+//   // Switcher, button and light pins.
+//   uint8_t switchPin, stopSignalButtonPin, frontLightPin, backLightPin;
 
-  // Timer states.
-  struct
-  {
-    uint32_t enableLightAt, disableLightAt;
-  } timers;
-};
+//   // Get stop signal button state,
+//   bool stopSignalButtonIsPressed();
 
-#endif
+//   // Timer states.
+//   struct
+//   {
+//     uint32_t enableLightAt, disableLightAt;
+//   } timers;
+// };
+
+// #endif
