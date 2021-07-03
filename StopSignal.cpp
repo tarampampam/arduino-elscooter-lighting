@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include "StopSignal.h"
 #include "PWM.h"
 #include "IO.h"

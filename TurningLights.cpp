@@ -1,66 +1,53 @@
-#include <Arduino.h>
 #include "TurningLights.h"
+#include "PWM.h"
+#include "IO.h"
 
-void TurningLights::init()
+TurningLights::TurningLights(InputSwitch *leftSw, InputSwitch *rightSw, OutputKey *leftKey, OutputKey *rightKey)
 {
-  pinMode(leftButtonPin, INPUT);
-  pinMode(rightButtonPin, INPUT);
+  leftInput = leftSw;
+  rightInput = rightSw;
+  leftOutput = leftKey;
+  rightOutput = rightKey;
 
-  pinMode(leftLightPin, OUTPUT);
-  pinMode(rightLightPin, OUTPUT);
+  pwm = new PWM(500 + 400, 400);
 }
 
-bool TurningLights::leftButtonIsPressed()
+void TurningLights::setBlinkingInterval(unsigned int on, unsigned int off)
 {
-  return digitalRead(leftButtonPin) == LOW;
+  pwm->setPeriodTime(on + off);
+  pwm->setImpulseTime(off);
 }
 
-bool TurningLights::rightButtonIsPressed()
+/// Do the main stop signal logic here.
+void TurningLights::tick(unsigned long currentTimeMs)
 {
-  return digitalRead(rightButtonPin) == LOW;
-}
+  bool leftInputIsOn = leftInput->isOn(), rightInputIsOn = rightInput->isOn();
 
-/// Do the main turning lights logic here.
-void TurningLights::tick()
-{
-  bool lBtnPressed = leftButtonIsPressed(), rBtnPressed = rightButtonIsPressed();
-
-  // if any button is pressed
-  if (lBtnPressed || rBtnPressed)
+  if (leftInputIsOn || rightInputIsOn)
   {
-    uint32_t currentTimeMs = millis();
-
-    if (currentTimeMs >= timers.enableLightAt)
+    switch (pwm->tick(currentTimeMs))
     {
-      timers.enableLightAt = currentTimeMs + powerOnTime + blinkingInterval;
-      timers.disableLightAt = currentTimeMs + powerOnTime;
-
-      if (lBtnPressed)
+    case PWM_HIGH:
+      if (leftInputIsOn)
       {
-        digitalWrite(leftLightPin, HIGH);
+        leftOutput->open();
       }
-      if (rBtnPressed)
+      if (rightInputIsOn)
       {
-        digitalWrite(rightLightPin, HIGH);
+        rightOutput->open();
       }
-    }
+      break;
 
-    if (currentTimeMs >= timers.disableLightAt)
-    {
-      digitalWrite(rightLightPin, LOW);
-      digitalWrite(leftLightPin, LOW);
+    case PWM_LOW:
+      leftOutput->close();
+      rightOutput->close();
+      break;
     }
   }
   else
   {
-    digitalWrite(rightLightPin, LOW);
-    digitalWrite(leftLightPin, LOW);
-
-    // reset timers state
-    if (timers.enableLightAt != 0 || timers.disableLightAt != 0)
-    {
-      timers.enableLightAt = 0;
-      timers.disableLightAt = 0;
-    }
+    leftOutput->close();
+    rightOutput->close();
+    pwm->reset();
   }
 }
