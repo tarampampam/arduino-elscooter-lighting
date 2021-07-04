@@ -1,90 +1,104 @@
-#include <Arduino.h>
+
+#include <avr/eeprom.h>
+#include "Clicker.h"
 #include "DRL.h"
+#include "PWM.h"
+#include "IO.h"
+
+DRL::DRL(InputSwitch *sw, InputSwitch *stopSw, OutputKey *frontKey, OutputKey *backKey)
+{
+  input = sw, stopInput = stopSw;
+  outputFront = frontKey, outputBack = backKey;
+
+  pwmFront = new PWM();
+  pwmFront->setFrequency(VERY_VERY_FAST);
+
+  pwmBack = new PWM();
+  pwmBack->setFrequency(FAST_SMALL_DELAY);
+
+  clicker = new Clicker(stopInput);
+}
+
+void DRL::setFrontBlinkingFrequency(Frequency f)
+{
+  pwmFront->setFrequency(f);
+}
+
+void DRL::setBackBlinkingFrequency(Frequency f)
+{
+  pwmBack->setFrequency(f);
+}
 
 void DRL::init()
 {
-  pinMode(switchPin, INPUT);
-
-  pinMode(frontLightPin, OUTPUT);
-  pinMode(backLightPin, OUTPUT);
+  readSettings();
 }
 
-bool DRL::switchIsOn()
+/// Do the main stop signal logic here.
+void DRL::tick(unsigned long int currentTimeMicros)
 {
-  return digitalRead(switchPin) == LOW;
-}
+  clicker->tick(currentTimeMicros);
 
-bool DRL::stopSignalButtonIsPressed()
-{
-  return digitalRead(stopSignalButtonPin) == LOW;
-}
-
-/// Do the main turning lights logic here.
-void DRL::tick()
-{
-  bool switchState = switchIsOn();
-
-  // FRONT LIGHT LOGIC
-  if (switchIsOn())
+  if (clicker->count() == 3)
   {
-    digitalWrite(frontLightPin, HIGH);
-  }
-  else
-  {
-    digitalWrite(frontLightPin, LOW);
+    clicker->reset();
+    settings.frontBlinkingEnabled = !settings.frontBlinkingEnabled;
+    writeSettings();
   }
 
-  // BACK LIGHT LOGIC
-  // if the stop signal pin is defined
-  if (stopSignalButtonPin != DRL::UNUSED_PIN)
+  if (input->isOn() && settings.frontBlinkingEnabled)
   {
-    // if the stop signal button is pressed
-    if (stopSignalButtonIsPressed())
+    switch (pwmFront->tick(currentTimeMicros))
     {
-      // do the timer logic
-      uint32_t currentTimeMs = millis();
+    case PWM_HIGH:
+      outputFront->open();
+      break;
 
-      if (currentTimeMs >= timers.enableLightAt)
-      {
-        timers.enableLightAt = currentTimeMs + powerOnTime + blinkingInterval;
-        timers.disableLightAt = currentTimeMs + powerOnTime;
+    case PWM_LOW:
+      outputFront->close();
+      break;
 
-        digitalWrite(backLightPin, HIGH);
-      }
-      else if (currentTimeMs >= timers.disableLightAt)
-      {
-        digitalWrite(backLightPin, LOW);
-      }
-    }
-    else // the stop signal button is unpressed
-    {
-      if (switchIsOn())
-      {
-        digitalWrite(backLightPin, HIGH);
-      }
-      else
-      {
-        digitalWrite(backLightPin, LOW);
-      }
-
-      // reset timers state
-      if (timers.enableLightAt != 0 || timers.disableLightAt != 0)
-      {
-        timers.enableLightAt = 0;
-        timers.disableLightAt = 0;
-      }
+    case PWM_NONE:
+      break;
     }
   }
   else
   {
-    // the stop signal button pin is not defined - do simple
-    if (switchIsOn())
+    input->isOn() ? outputFront->open() : outputFront->close();
+
+    pwmFront->reset();
+  }
+
+  if (stopInput->isOn()) // stop signal button is pressed?
+  {
+    switch (pwmBack->tick(currentTimeMicros)) // use PWM for back light blinking
     {
-      digitalWrite(backLightPin, HIGH);
-    }
-    else
-    {
-      digitalWrite(backLightPin, LOW);
+    case PWM_HIGH:
+      outputBack->open();
+      break;
+
+    case PWM_LOW:
+      outputBack->close();
+      break;
+
+    case PWM_NONE:
+      break;
     }
   }
+  else // just enable or disable back lightnings
+  {
+    input->isOn() ? outputBack->open() : outputBack->close();
+
+    pwmBack->reset();
+  }
+}
+
+void DRL::readSettings()
+{
+  settings.frontBlinkingEnabled = eeprom_read_byte((const uint8_t *)DRL_EEPROM_SETTINGS_FRONT_BLINKING_ENABLED_ADDR) != 255; // 255 = false, any another = true
+}
+
+void DRL::writeSettings()
+{
+  eeprom_write_byte((uint8_t *)DRL_EEPROM_SETTINGS_FRONT_BLINKING_ENABLED_ADDR, settings.frontBlinkingEnabled ? 1 : 255);
 }
