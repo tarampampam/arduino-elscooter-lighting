@@ -10,7 +10,6 @@ public:
   StopSignal() = delete;
   StopSignal(InputSwitch *sw, OutputKey *key);
   void setBlinkingFrequency(Frequency);
-  void setBlinkingInterval(unsigned long int on, unsigned long int off);
   void tick(unsigned long int /* micros() */);
 
 private:

@@ -1,5 +1,5 @@
 #include "IO.h"
-#include "Arduino.h"
+#include <Arduino.h>
 
 InputSwitch::InputSwitch(unsigned short int p)
 {
@@ -25,11 +25,6 @@ bool InputSwitch::isOn()
 bool InputSwitch::isOff()
 {
   return !isOn();
-}
-
-unsigned short int InputSwitch::pin()
-{
-  return pinNumber;
 }
 
 OutputKey::OutputKey(unsigned short int p)
@@ -58,9 +53,4 @@ void OutputKey::close()
   init();
 
   digitalWrite(pinNumber, LOW);
-}
-
-unsigned short int OutputKey::pin()
-{
-  return pinNumber;
 }

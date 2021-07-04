@@ -16,7 +16,7 @@ void PWM::setFrequency(Frequency f)
   switch (f)
   {
   case ALWAYS:
-    setPeriodTime(100000), setImpulseTime(100000);
+    setPeriodTime(10000), setImpulseTime(10000);
     break;
 
   case VERY_SLOW:
@@ -36,7 +36,7 @@ void PWM::setFrequency(Frequency f)
     break;
 
   case FAST_SMALL_DELAY:
-    setPeriodTime(320000), setImpulseTime(250000);
+    setPeriodTime(320000), setImpulseTime(220000);
     break;
 
   case VERY_FAST:
@@ -48,7 +48,7 @@ void PWM::setFrequency(Frequency f)
     break;
 
   case NEVER:
-    setPeriodTime(100000), setImpulseTime(0);
+    setPeriodTime(10000), setImpulseTime(0);
     break;
   }
 }

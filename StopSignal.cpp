@@ -15,12 +15,6 @@ void StopSignal::setBlinkingFrequency(Frequency f)
   pwm->setFrequency(f);
 }
 
-void StopSignal::setBlinkingInterval(unsigned long int on, unsigned long int off)
-{
-  pwm->setPeriodTime(on + off);
-  pwm->setImpulseTime(off);
-}
-
 /// Do the main stop signal logic here.
 void StopSignal::tick(unsigned long int currentTimeMicros)
 {

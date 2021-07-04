@@ -9,7 +9,6 @@ public:
   void init();
   bool isOn();
   bool isOff();
-  unsigned short int pin();
 
 private:
   bool inited = false;
@@ -24,7 +23,6 @@ public:
   void init();
   void open();
   void close();
-  unsigned short int pin();
 
 private:
   bool inited = false;

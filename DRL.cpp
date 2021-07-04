@@ -1,3 +1,4 @@
+#include "Clicker.h"
 #include "DRL.h"
 #include "PWM.h"
 #include "IO.h"
@@ -7,32 +8,62 @@ DRL::DRL(InputSwitch *sw, InputSwitch *stopSw, OutputKey *frontKey, OutputKey *b
   input = sw, stopInput = stopSw;
   outputFront = frontKey, outputBack = backKey;
 
-  pwm = new PWM();
-  pwm->setFrequency(FAST_SMALL_DELAY);
+  pwmFront = new PWM();
+  pwmFront->setFrequency(VERY_VERY_FAST);
+
+  pwmBack = new PWM();
+  pwmBack->setFrequency(FAST_SMALL_DELAY);
+
+  clicker = new Clicker(stopInput);
 }
 
-void DRL::setBlinkingFrequency(Frequency f)
+void DRL::setFrontBlinkingFrequency(Frequency f)
 {
-  pwm->setFrequency(f);
+  pwmFront->setFrequency(f);
 }
 
-void DRL::setBlinkingInterval(unsigned long int on, unsigned long int off)
+void DRL::setBackBlinkingFrequency(Frequency f)
 {
-  pwm->setPeriodTime(on + off);
-  pwm->setImpulseTime(off);
+  pwmBack->setFrequency(f);
 }
 
 /// Do the main stop signal logic here.
 void DRL::tick(unsigned long int currentTimeMicros)
 {
-  bool switchIsOn = input->isOn();
+  clicker->tick(currentTimeMicros);
 
-  // front key logic is very simple
-  switchIsOn ? outputFront->open() : outputFront->close();
-
-  if (stopInput->isOn())
+  if (clicker->count() == 3)
   {
-    switch (pwm->tick(currentTimeMicros))
+    frontBlinkingEnabled = !frontBlinkingEnabled;
+    clicker->reset();
+  }
+
+  if (frontBlinkingEnabled)
+  {
+    switch (pwmFront->tick(currentTimeMicros))
+    {
+    case PWM_HIGH:
+      outputFront->open();
+      break;
+
+    case PWM_LOW:
+      outputFront->close();
+      break;
+
+    case PWM_NONE:
+      break;
+    }
+  }
+  else
+  {
+    input->isOn() ? outputFront->open() : outputFront->close();
+
+    pwmFront->reset();
+  }
+
+  if (stopInput->isOn()) // stop signal button is pressed?
+  {
+    switch (pwmBack->tick(currentTimeMicros)) // use PWM for back light blinking
     {
     case PWM_HIGH:
       outputBack->open();
@@ -46,11 +77,10 @@ void DRL::tick(unsigned long int currentTimeMicros)
       break;
     }
   }
-  else
+  else // just enable or disable back lightnings
   {
-    pwm->reset();
+    input->isOn() ? outputBack->open() : outputBack->close();
 
-    // keep back light logis simple
-    switchIsOn ? outputBack->open() : outputBack->close();
+    pwmBack->reset();
   }
 }

@@ -16,12 +16,6 @@ void TurningLights::setBlinkingFrequency(Frequency f)
   pwm->setFrequency(f);
 }
 
-void TurningLights::setBlinkingInterval(unsigned long int on, unsigned long int off)
-{
-  pwm->setPeriodTime(on + off);
-  pwm->setImpulseTime(off);
-}
-
 /// Do the main stop signal logic here.
 void TurningLights::tick(unsigned long int currentTimeMicros)
 {
