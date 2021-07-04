@@ -19,6 +19,7 @@ Arduino board and LEDs use the same power 12V line.
 ### Additional features:
 
 - When stop button is pressed - DRL back light lamps will blinks together with the stop signal;
+- Triple-click on stop signal button enables stroboscope mode for the front DRL lights;
 
 ## Schematic & PCB
 

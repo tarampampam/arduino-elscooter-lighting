@@ -1,3 +1,5 @@
+
+#include <avr/eeprom.h>
 #include "Clicker.h"
 #include "DRL.h"
 #include "PWM.h"
@@ -27,6 +29,11 @@ void DRL::setBackBlinkingFrequency(Frequency f)
   pwmBack->setFrequency(f);
 }
 
+void DRL::init()
+{
+  readSettings();
+}
+
 /// Do the main stop signal logic here.
 void DRL::tick(unsigned long int currentTimeMicros)
 {
@@ -34,11 +41,12 @@ void DRL::tick(unsigned long int currentTimeMicros)
 
   if (clicker->count() == 3)
   {
-    frontBlinkingEnabled = !frontBlinkingEnabled;
     clicker->reset();
+    settings.frontBlinkingEnabled = !settings.frontBlinkingEnabled;
+    writeSettings();
   }
 
-  if (frontBlinkingEnabled)
+  if (input->isOn() && settings.frontBlinkingEnabled)
   {
     switch (pwmFront->tick(currentTimeMicros))
     {
@@ -83,4 +91,14 @@ void DRL::tick(unsigned long int currentTimeMicros)
 
     pwmBack->reset();
   }
+}
+
+void DRL::readSettings()
+{
+  settings.frontBlinkingEnabled = eeprom_read_byte((const uint8_t *)DRL_EEPROM_SETTINGS_FRONT_BLINKING_ENABLED_ADDR) != 255; // 255 = false, any another = true
+}
+
+void DRL::writeSettings()
+{
+  eeprom_write_byte((uint8_t *)DRL_EEPROM_SETTINGS_FRONT_BLINKING_ENABLED_ADDR, settings.frontBlinkingEnabled ? 1 : 255);
 }

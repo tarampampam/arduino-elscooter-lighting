@@ -29,6 +29,8 @@ void setup()
   stopSignalKey.init();
   leftTurningKey.init();
   rightTurningKey.init();
+
+  drl.init();
 }
 
 void loop()
