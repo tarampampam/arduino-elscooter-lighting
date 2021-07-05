@@ -11,6 +11,7 @@ This repository contains the source code of firmware for the additional board, w
 
 - Turning lights
 - Stop signal
+- Daytime running lights (DRL; front and back)
 
 When the button, connected on `left turn btn` is pressed - lamps (12V) connected to the `left turn leds` will be blinks (about 500ms lightning will be on). The same with the `right turn btn` and `right turn leds`. Stop signal button do the then thing, but on separate pin's.
 
