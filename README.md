@@ -17,17 +17,18 @@ When the button, connected on `left turn btn` is pressed - lamps (12V) connected
 
 Arduino board and LEDs use the same power 12V line.
 
-### Additional features:
+### Additional features
 
 - When stop button is pressed - DRL back light lamps will blinks together with the stop signal;
-- Triple-click on stop signal button enables stroboscope mode for the front DRL lights;
+- Five clicks on stop signal button enables DRL lights (DRL switch alternative; mode is stored in non-volatile memory);
+- Triple-click on stop signal button enables stroboscope mode for the front DRL lights (mode is stored in non-volatile memory);
 
 ## Schematic & PCB
 
 ![circuit](./art/circuit.png)
 
-Front side | Back side
-:--------: | :-------:
+Front side                        | Back side
+:-------------------------------: | :-------:
 ![pcb-front](./art/pcb-front.png) | ![pcb-back](./art/pcb-back.png)
 
 Project for EasyEDA can be [found here][easyeda_project].

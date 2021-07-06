@@ -1,4 +1,3 @@
-
 #include <avr/eeprom.h>
 #include "Clicker.h"
 #include "DRL.h"
@@ -39,14 +38,22 @@ void DRL::tick(unsigned long int currentTimeMicros)
 {
   clicker->tick(currentTimeMicros);
 
-  if (clicker->count() == 3)
+  switch (clicker->count())
   {
+  case 3:
     clicker->reset();
     settings.frontBlinkingEnabled = !settings.frontBlinkingEnabled;
     writeSettings();
+    break;
+
+  case 5:
+    clicker->reset();
+    settings.lightsEnabled = !settings.lightsEnabled;
+    writeSettings();
+    break;
   }
 
-  if (input->isOn() && settings.frontBlinkingEnabled)
+  if ((input->isOn() || settings.lightsEnabled) && settings.frontBlinkingEnabled)
   {
     switch (pwmFront->tick(currentTimeMicros))
     {
@@ -64,7 +71,7 @@ void DRL::tick(unsigned long int currentTimeMicros)
   }
   else
   {
-    input->isOn() ? outputFront->open() : outputFront->close();
+    (input->isOn() || settings.lightsEnabled) ? outputFront->open() : outputFront->close();
 
     pwmFront->reset();
   }
@@ -87,7 +94,7 @@ void DRL::tick(unsigned long int currentTimeMicros)
   }
   else // just enable or disable back lightnings
   {
-    input->isOn() ? outputBack->open() : outputBack->close();
+    (input->isOn() || settings.lightsEnabled) ? outputBack->open() : outputBack->close();
 
     pwmBack->reset();
   }
@@ -95,10 +102,13 @@ void DRL::tick(unsigned long int currentTimeMicros)
 
 void DRL::readSettings()
 {
-  settings.frontBlinkingEnabled = eeprom_read_byte((const uint8_t *)DRL_EEPROM_SETTINGS_FRONT_BLINKING_ENABLED_ADDR) != 255; // 255 = false, any another = true
+  // For booleans: 255 = false, any another = true
+  settings.frontBlinkingEnabled = eeprom_read_byte((const uint8_t *)DRL_EEPROM_SETTINGS_FRONT_BLINKING_ENABLED_ADDR) != 255;
+  settings.lightsEnabled = eeprom_read_byte((const uint8_t *)DRL_EEPROM_SETTINGS_LIGHTS_ENABLED_ADDR) != 255;
 }
 
 void DRL::writeSettings()
 {
-  eeprom_write_byte((uint8_t *)DRL_EEPROM_SETTINGS_FRONT_BLINKING_ENABLED_ADDR, settings.frontBlinkingEnabled ? 1 : 255);
+  eeprom_update_byte((uint8_t *)DRL_EEPROM_SETTINGS_FRONT_BLINKING_ENABLED_ADDR, settings.frontBlinkingEnabled ? 1 : 255);
+  eeprom_update_byte((uint8_t *)DRL_EEPROM_SETTINGS_LIGHTS_ENABLED_ADDR, settings.lightsEnabled ? 1 : 255);
 }

@@ -4,7 +4,8 @@
 #include "Clicker.h"
 #include "IO.h"
 
-#define DRL_EEPROM_SETTINGS_FRONT_BLINKING_ENABLED_ADDR 0x0001 // 1 byte (bool)
+#define DRL_EEPROM_SETTINGS_FRONT_BLINKING_ENABLED_ADDR 0b00000001 // 1 byte (bool)
+#define DRL_EEPROM_SETTINGS_LIGHTS_ENABLED_ADDR 0b00000010         // 1 byte (bool)
 
 // DRL is a "Daytime running lights".
 class DRL
@@ -25,6 +26,7 @@ private:
   volatile struct
   {
     bool frontBlinkingEnabled = false;
+    bool lightsEnabled = false;
   } settings;
 
   void readSettings();
