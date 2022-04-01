@@ -44,7 +44,7 @@ jobs: # Docs: <https://help.github.com/en/articles/workflow-syntax-for-github-ac
 
       - name: Cache Arduino CLI data
         id: arduino-cli-cache
-        uses: actions/cache@v3.0.1
+        uses: actions/cache@v3
         with:
           path: ${{ steps.arduino-cli-data.outputs.dir }}
           key: arduino-cli-data-${{ steps.cache-values.outputs.salt }}
