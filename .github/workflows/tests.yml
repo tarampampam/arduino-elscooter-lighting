@@ -14,7 +14,7 @@ jobs: # Docs: <https://help.github.com/en/articles/workflow-syntax-for-github-ac
     runs-on: ubuntu-20.04
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # Its focus is on the structure, metadata, and configuration of Arduino projects, rather than the code
       - name: Run the linter
@@ -29,7 +29,7 @@ jobs: # Docs: <https://help.github.com/en/articles/workflow-syntax-for-github-ac
     runs-on: ubuntu-20.04
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Arduino CLI
         uses: arduino/setup-arduino-cli@v1 # https://github.com/arduino/setup-arduino-cli
